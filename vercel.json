@@ -1,0 +1,6 @@
+{
+    "version": 2,
+    "name": "music-album",
+    "builds": [{"src": "back/app.js", "use": "@vercel/node"}],
+    "routes": [{"src": "back/(.*)", "dest": "back/app.js"}]
+}
