@@ -1,5 +1,4 @@
-// const pool = require("../../../../userData/user");
-const pool = require("../../../../userData/user");
+const pool = require("../../../../dbData/dbMiddleware");
 
 const createTodo = (request, response) => {
     const {todo_name, todo_filter} = request.body;

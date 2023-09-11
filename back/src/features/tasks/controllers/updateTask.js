@@ -1,4 +1,4 @@
-const pool = require("../../../../userData/user");
+const pool = require("../../../../dbData/dbMiddleware");
 
 const updateTask = (request, response) => {
     const id = parseInt(request.params.task_id);

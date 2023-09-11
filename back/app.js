@@ -1,19 +1,21 @@
+// http server
 const cors = require("cors");
 const express = require("express");
 const bodyParser = require("body-parser");
 const {routes} = require("./routes");
 
-// const db = require("./features/todos/controllers/createTodo");
 const app = express();
+const server = require("http").createServer(app);
+const io = require("socket.io")(server, {
+    cors: {
+        origin: "http://localhost:3000",
+        // methods: ["GET"],
+    },
+});
 
-// const Pool = require("pg").Pool;
-// const pool = new Pool({
-//     user: "postgres",
-//     host: "localhost",
-//     database: "todo",
-//     password: "1",
-//     port: 5432,
-// });
+// http settings
+const host = "127.0.0.1";
+const port = process.env.PORT || 4000;
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -24,54 +26,47 @@ app.use(
     })
 );
 routes(app);
-// app.use(bodyParser.json());
 
-const hostname = "127.0.0.1";
-const port = 4000;
+app.listen(port, host, () => {
+    console.log(`Server running at http://${host}:${port}/`);
+});
 
-// app.get(todosUrls.profile, (req, res) => {
-//     res.statusCode === 202;
-//     res.send("START PAGE");
-// });
-// app.get(todosUrls.profile1, (req, res) => {
-//     // res.statusCode === 404
-//     res.send("some123 other page");
-// });
+const ioPort = 3001;
+// io settings
+server.listen(ioPort, function () {
+    console.log("App listening at http://%s:%s", host, ioPort);
+    console.log(host, ioPort);
+});
 
-// app.post(todosUrls.todos, (req, res) => {
-//     if (res.statusCode === 200) {
-//         // const id = crypto.randomUUID();
-//         const id = "someid";
-//         todos.push({id, name: "Some New Name"});
-//         res.send(JSON.stringify({data: "feiwjfiewj"}));
-//         res.send("request");
-//     } else {
-//         res.send("someShit");
-//     }
-// });
-// app.get(todosUrls.todos, (req, res) => {
-//     res.statusCode = 200;
-//     // const id = crypto.randomUUID();
-//     const id = "someid";
-//     todos.push({id, name: "Some New Name"});
-//     res.send(JSON.stringify(todos));
-//     res.send("request");
-// });
+const messages = [
+    {author: "Maria", message: "can i help you?", id: "345rt43jtig", time: "17:31", manager: true},
+    {author: "user2314", message: "хотел бы открыть карту в вашем банке", id: "345п2eds34rt43jtig", time: "17:32"},
+    {
+        author: "Maria",
+        message: "подождите секунду, уточню у оператора",
+        id: "345п2eds32344rt43jtig",
+        time: "17:33",
+        manager: true,
+    },
+];
 
-// app.post("/todos", db.createTodo);
-// app.post("/todos", db.createTodo);
-// app.get("/", (request, response) => {
-//     response.json({info: "Node.js, Express, and Postgres API"});
-// });
+io.on("connection", function (socket) {
+    console.log("Client connected to the WebSocket");
+    socket.emit("init-messages-published", messages);
+    socket.on("disconnect", () => {
+        console.log("Client disconnected");
+    });
 
-// app.get("/users", db.getUsers);
-// app.get("/users/:id", db.getUserById);
-// app.post("/users", db.createUser);
-// app.put("/users/:id", db.updateUser);
-// app.delete("/users/:id", db.deleteUser);
-
-// app.get("/todos/:id", db.getTodoTasks);
-
-app.listen(port, hostname, () => {
-    console.log(`Server running at http://${hostname}:${port}/`);
+    socket.on("chat message", function (msg) {
+        console.log(msg);
+        const message = {
+            author: "Alex",
+            message: msg,
+            id: "string" + new Date().getTime() + msg,
+            time: "17:52" + Math.random() * 1000,
+        };
+        messages.push(message);
+        console.log("Received a chat message", message);
+        socket.emit("init-messages-published", messages);
+    });
 });

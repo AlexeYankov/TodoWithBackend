@@ -1,4 +1,4 @@
-const pool = require("../../../../userData/user");
+const pool = require("../../../../dbData/dbMiddleware");
 
 const getTodos = async (request, response) => {
     pool.query("SELECT * FROM todo ORDER BY todo_user_id DESC", (error, results) => {

@@ -1,4 +1,4 @@
-const pool = require("../../../../userData/user");
+const pool = require("../../../../dbData/dbMiddleware");
 
 const getTasks = async (request, response) => {
     pool.query("SELECT * FROM tasks ORDER BY task_id DESC", (error, results) => {

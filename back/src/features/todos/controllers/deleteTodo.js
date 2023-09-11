@@ -1,4 +1,4 @@
-const pool = require("../../../../userData/user");
+const pool = require("../../../../dbData/dbMiddleware");
 
 const deleteTodo = (request, response) => {
     const todo_id = parseInt(request.params.todo_id);

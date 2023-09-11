@@ -11,10 +11,4 @@ tasks.post("/", createTask);
 tasks.delete("/:task_id", deleteTask);
 tasks.put("/:task_id", updateTask);
 
-// todos.delete("/", createTask);
-// todos.put("/:task_id", updateTask);
-
-
-// app.get("/", db.getTodos);
-
 module.exports = tasks
